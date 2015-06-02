@@ -6,39 +6,39 @@ Installs and configures Lustre latest-feature-release server and clients.
 The configuration is a simplified setup inspired by
 http://www.dell.com/downloads/global/solutions/200-DELL-CAMBRIDGE-SOLUTIONS-WHITEPAPER-20072010b.pdf
      
-              -----------------------------
-              |       MGS/MDS Module      |
-              |                           |
-              |        -----------        |
-              |MGS01 <-|         |->      |
-              |MDT01 <-| Shared  |->      |
-              |  |     | Storage |     |  |
-              |  |     |         |     |  |
-              |  |     -----------     |  |
-              |  |                     |  |
-              | -----------   ----------- |
-              | |  MDS01  |   |  MDS02  | |
-              | |  Active |   | Standby | |
-              | -----------   ----------- |
-              -----------------------------
-                            | 
-  -----------               |
-  |         |               |
-  | Clients |               |                -----------------------------
-  |         | -------------------------------|        OSS Module         | 
-  -----------            NETWORK             |                           |
-                                             |        -----------        |
-                                             |OST01 <-|         |->      |
-                                             |  |   <-| Shared  |-> OST02| 
-                                             |  |     | Storage |     |  |
-                                             |  |     |         |     |  |
-                                             |  |     -----------     |  |
-                                             |  |                     |  |
-                                             | -----------   ----------- |
-                                             | |  OSS01  |   |  OSS02  | |
-                                             | |  Active |   |  Active | |
-                                             | -----------   ----------- |
-                                             -----------------------------
+                -----------------------------
+                |       MGS/MDS Module      |
+                |                           |
+                |        -----------        |
+                |MGS01 <-|         |->      |
+                |MDT01 <-| Shared  |->      |
+                |  |     | Storage |     |  |
+                |  |     |         |     |  |
+                |  |     -----------     |  |
+                |  |                     |  |
+                | -----------   ----------- |
+                | |  MDS01  |   |  MDS02  | |
+                | |  Active |   | Standby | |
+                | -----------   ----------- |
+                -----------------------------
+                              | 
+    -----------               |
+    |         |               |
+    | Clients |               |                -----------------------------
+    |         | -------------------------------|        OSS Module         | 
+    -----------            NETWORK             |                           |
+                                               |        -----------        |
+                                               |OST01 <-|         |->      |
+                                               |  |   <-| Shared  |-> OST02| 
+                                               |  |     | Storage |     |  |
+                                               |  |     |         |     |  |
+                                               |  |     -----------     |  |
+                                               |  |                     |  |
+                                               | -----------   ----------- |
+                                               | |  OSS01  |   |  OSS02  | |
+                                               | |  Active |   |  Active | |
+                                               | -----------   ----------- |
+                                               -----------------------------
 
 Server supported only on CentOS6.
 Clients supported on Debian(Ubuntu), CentOS(Fedora), SLE11 SP3.
