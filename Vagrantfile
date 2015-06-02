@@ -8,7 +8,6 @@ Vagrant.configure(2) do |config|
     # installing lustre kernel removes virtualbox guest additions
     mds01.vm.synced_folder ".", "/vagrant", disabled: true
     mds01.vm.network "private_network", ip: "10.0.4.6"
-    #mds01.vm.network "forwarded_port", guest: 22, host: 2046
     mds01.vm.provider "virtualbox" do |v|
       v.memory = 256  # lustre is greedy and segfaults with small RAM
       # https://jira.hpdd.intel.com/browse/LU-5697
@@ -34,7 +33,6 @@ Vagrant.configure(2) do |config|
     # installing lustre kernel removes virtualbox guest additions
     mds02.vm.synced_folder ".", "/vagrant", disabled: true
     mds02.vm.network "private_network", ip: "10.0.4.7"
-    #mds02.vm.network "forwarded_port", guest: 22, host: 2047
     mds02.vm.provider "virtualbox" do |v|
       v.memory = 256  # lustre is greedy and segfaults with small RAM
       # https://jira.hpdd.intel.com/browse/LU-5679
@@ -60,7 +58,6 @@ Vagrant.configure(2) do |config|
     # installing lustre kernel removes virtualbox guest additions
     oss01.vm.synced_folder ".", "/vagrant", disabled: true
     oss01.vm.network "private_network", ip: "10.0.4.8"
-    #oss01.vm.network "forwarded_port", guest: 22, host: 2048
     oss01.vm.provider "virtualbox" do |v|
       v.memory = 256  # lustre is greedy and segfaults with small RAM
       # https://jira.hpdd.intel.com/browse/LU-5697
@@ -86,7 +83,6 @@ Vagrant.configure(2) do |config|
     # installing lustre kernel removes virtualbox guest additions
     oss02.vm.synced_folder ".", "/vagrant", disabled: true
     oss02.vm.network "private_network", ip: "10.0.4.9"
-    #oss02.vm.network "forwarded_port", guest: 22, host: 2049
     oss02.vm.provider "virtualbox" do |v|
       v.memory = 256  # lustre is greedy and segfaults with small RAM
       # https://jira.hpdd.intel.com/browse/LU-5697
@@ -110,7 +106,6 @@ Vagrant.configure(2) do |config|
     centos6.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
     centos6.vm.network "private_network", ip: "10.0.4.20"
-    #centos6.vm.network "forwarded_port", guest: 22, host: 20420
     centos6.vm.provider "virtualbox" do |v|
       v.memory = 128
       v.cpus = 1
@@ -121,10 +116,9 @@ Vagrant.configure(2) do |config|
     centos6_lustre18.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6_lustre18.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
     centos6_lustre18.vm.network "private_network", ip: "10.0.4.21"
-    #centos6_lustre18.vm.network "forwarded_port", guest: 22, host: 20421
     centos6_lustre18.vm.provider "virtualbox" do |v|
-      v.memory = 128
-      v.cpus = 1
+      v.memory = 256  # rpmbuild of lustre is greedy
+      v.cpus = 2
     end
   end
   # centos7 client
@@ -132,7 +126,6 @@ Vagrant.configure(2) do |config|
     centos7.vm.box = "puppetlabs/centos-7.0-64-nocm"
     centos7.vm.box_url = 'puppetlabs/centos-7.0-64-nocm'
     centos7.vm.network "private_network", ip: "10.0.4.30"
-    #centos7.vm.network "forwarded_port", guest: 22, host: 20430
     centos7.vm.provider "virtualbox" do |v|
       v.memory = 128
       v.cpus = 1
@@ -143,30 +136,7 @@ Vagrant.configure(2) do |config|
     ubuntu12.vm.box = "puppetlabs/ubuntu-12.04-64-nocm"
     ubuntu12.vm.box_url = 'puppetlabs/ubuntu-12.04-64-nocm'
     ubuntu12.vm.network "private_network", ip: "10.0.4.40"
-    #ubuntu12.vm.network "forwarded_port", guest: 22, host: 20440
     ubuntu12.vm.provider "virtualbox" do |v|
-      v.memory = 128
-      v.cpus = 1
-    end
-  end
-  # ubuntu14 client
-  config.vm.define "ubuntu14" do |ubuntu14|
-    ubuntu14.vm.box = "puppetlabs/ubuntu-14.04-64-nocm"
-    ubuntu14.vm.box_url = 'puppetlabs/ubuntu-14.04-64-nocm'
-    ubuntu14.vm.network "private_network", ip: "10.0.4.50"
-    #ubuntu14.vm.network "forwarded_port", guest: 22, host: 20450
-    ubuntu14.vm.provider "virtualbox" do |v|
-      v.memory = 128
-      v.cpus = 1
-    end
-  end
-  # debian7 client
-  config.vm.define "debian7" do |debian7|
-    debian7.vm.box = "puppetlabs/debian-7.8-64-nocm"
-    debian7.vm.box_url = 'puppetlabs/debian-7.8-64-nocm'
-    debian7.vm.network "private_network", ip: "10.0.4.60"
-    #debian7.vm.network "forwarded_port", guest: 22, host: 20460
-    debian7.vm.provider "virtualbox" do |v|
       v.memory = 128
       v.cpus = 1
     end
@@ -176,7 +146,6 @@ Vagrant.configure(2) do |config|
     sles11sp3.vm.box = "suse/sles11sp3"
     sles11sp3.vm.box_url = 'suse/sles11sp3'
     sles11sp3.vm.network "private_network", ip: "10.0.4.70"
-    #sles11sp3.vm.network "forwarded_port", guest: 22, host: 20470
     sles11sp3.vm.provider "virtualbox" do |v|
       v.memory = 128
       v.cpus = 1
@@ -212,8 +181,6 @@ cat <<END >> /etc/hosts
 10.0.4.21 centos6_lustre18
 10.0.4.30 centos7
 10.0.4.40 ubuntu12
-10.0.4.50 ubuntu14
-10.0.4.60 debian7
 10.0.4.70 sles11sp3
 END
 SCRIPT
@@ -516,26 +483,6 @@ SCRIPT
       s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     ubuntu12.vm.provision :reload
-  end
-  config.vm.define "ubuntu14" do |ubuntu14|
-    ubuntu14.vm.provision :shell, :inline => "hostname ubuntu14", run: "always"
-    ubuntu14.vm.provision :shell, :inline => $etc_hosts
-    ubuntu14.vm.provision :shell, :inline => "apt-get -y install lustre-utils"
-    ubuntu14.vm.provision "shell" do |s|
-      s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
-    end
-    ubuntu14.vm.provision :reload
-  end
-  config.vm.define "debian7" do |debian7|
-    debian7.vm.provision :shell, :inline => "hostname debian7", run: "always"
-    debian7.vm.provision :shell, :inline => $etc_hosts
-    debian7.vm.provision :shell, :inline => "apt-get -y install lustre-utils"
-    debian7.vm.provision "shell" do |s|
-      s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
-    end
-    debian7.vm.provision :reload
   end
   config.vm.define "sles11sp3" do |sles11sp3|
     sles11sp3.vm.provision :shell, :inline => "hostname sles11sp3", run: "always"

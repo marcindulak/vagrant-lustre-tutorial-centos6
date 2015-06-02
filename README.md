@@ -40,8 +40,8 @@ http://www.dell.com/downloads/global/solutions/200-DELL-CAMBRIDGE-SOLUTIONS-WHIT
                                                | -----------   ----------- |
                                                -----------------------------
 
-Server supported only on CentOS6.
-Clients supported on Debian(Ubuntu), CentOS(Fedora), SLE11 SP3.
+Server supported only on CentOS 6.
+Clients supported on Ubuntu 12.04, CentOS 6/7.
 
 For introduction to lustre see https://www.citutor.org/login.php?course=61
 "Using the Lustre File System - Cyberinfrastructure Tutor"
@@ -112,13 +112,10 @@ Test (manual) failover of an OST::
 
 Test other clients::
 
-        $ vagrant up centos6 centos6_lustre18 ubuntu12 ubuntu14 debian7 sles11sp3
+        $ vagrant up centos6 centos6_lustre18 ubuntu12
         $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
         $ vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"
         $ vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh ubuntu14 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh debian7 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh sles11sp3 -c "sudo su -c 'lfs df -h'"
 
 When done, destroy the test machines with::
 
@@ -143,4 +140,3 @@ BSD 2-clause
 Todo
 ----
 
-1. convert this into a high-availability setup
