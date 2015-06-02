@@ -81,9 +81,10 @@ Testing file-per-process (only one ior process used here) small, random IO, assu
         $ vagrant ssh centos7 -c "sudo su -c 'tar zxf ior-3.0.1.tar.gz'"
         $ vagrant ssh centos7 -c "sudo su -c 'yum -y install automake'"
         $ vagrant ssh centos7 -c "sudo su -c 'cd ior-3.0.1; sh bootstrap'"
+        $ vagrant ssh centos7 -c "sudo su -c 'yum -y install openmpi-devel'"
         $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; cd ior-3.0.1; ./configure'"
         $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; cd ior-3.0.1; make'"
-        $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; mpirun -np 1 --bynode ior-3.0.1/src/ior -v -a POSIX -i5 -g -e -w -r -b 512m -t 4m -o /lustre/testfile -F -C -b 256k -t 4k -O lustreStripeCount=1 -z random'"
+        $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; mpirun -np 1 --bynode ior-3.0.1/src/ior -v -a POSIX -i5 -g -e -w -r 512m -b 4m -o /lustre/testfile -F -C -b 256k -t 4k -O lustreStripeCount=1 -z random'"
 
 Other benchmarks from http://www.opensfs.org/wp-content/uploads/2013/04/LIND_LUG_2013.pdf::
 
@@ -95,11 +96,19 @@ Other benchmarks from http://www.opensfs.org/wp-content/uploads/2013/04/LIND_LUG
         $ vagrant ssh centos7 -c "sudo su -c 'wget http://downloads.sourceforge.net/project/mdtest/mdtest%20latest/mdtest-1.9.3/mdtest-1.9.3.tgz'"
         $ vagrant ssh centos7 -c "sudo su -c 'mkdir mdtest-1.9.3; cd mdtest-1.9.3'"
         $ vagrant ssh centos7 -c "sudo su -c 'cd mdtest-1.9.3; tar zxf ../mdtest-1.9.3.tgz'"
-        $ vagrant ssh centos7 -c "sudo su -c 'yum -y install openmpi-devel'"
         $ vagrant ssh centos7 -c "sudo su -c 'sed -i \"s/OS=.*/OS=Linux/\" mdtest-1.9.3/Makefile'"
+        $ vagrant ssh centos7 -c "sudo su -c 'yum -y install openmpi-devel'"
         $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; cd mdtest-1.9.3; MPI_CC=mpicc make'"
-        $ vagrant ssh centos7 -c "sudo su -c './mdtest-1.9.3/mdtest –I 10 –i 5 –z 5 –b 2 –d /lustre'"
-        $ vagrant ssh centos7 -c "sudo su -c 'dd if=/dev/zero of=/lustre/dd bs=1M count=512 oflag=direct conv=fdatasync'"
+        $ vagrant ssh centos7 -c "sudo su -c '. /etc/profile.d/modules.sh; module load mpi; ./mdtest-1.9.3/mdtest –I 10 –i 5 –z 5 –b 2 –d /lustre'"
+        $ vagrant ssh centos7 -c "sudo su -c 'dd if=/dev/zero of=/lustre/testfile bs=1M count=512 oflag=direct conv=fdatasync'"
+        $ vagrant ssh centos7 -c "sudo su -c 'rm -f /lustre/testfile'"
+
+Test other clients::
+
+        $ vagrant up centos6 centos6_lustre18 ubuntu12
+        $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
+        $ vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"
+        $ vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"
 
 Test (manual) failover of an OST::
 
@@ -109,13 +118,6 @@ Test (manual) failover of an OST::
         $ vagrant ssh oss01 -c "sudo su -c 'mkdir -p /lustre/ost02'"
         $ vagrant ssh oss01 -c "sudo su -c 'mount /lustre/ost02'"
         $ vagrant ssh centos7 -c "sudo su -c 'lfs df -h'"
-
-Test other clients::
-
-        $ vagrant up centos6 centos6_lustre18 ubuntu12
-        $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"
 
 When done, destroy the test machines with::
 
