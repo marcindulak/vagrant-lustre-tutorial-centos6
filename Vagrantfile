@@ -415,7 +415,7 @@ SCRIPT
     centos6.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos6.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     centos6.vm.provision :reload
     centos6.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -452,7 +452,7 @@ SCRIPT
     centos6_lustre18.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos6_lustre18.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     centos6_lustre18.vm.provision :reload
     centos6_lustre18.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -468,7 +468,7 @@ SCRIPT
     centos7.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos7.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     centos7.vm.provision :reload
     centos7.vm.provision :shell, :inline => $systemctl_stop_firewalld, run: "always"
@@ -480,7 +480,7 @@ SCRIPT
     ubuntu12.vm.provision :shell, :inline => "apt-get -y install lustre-utils"
     ubuntu12.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     ubuntu12.vm.provision :reload
   end
@@ -493,7 +493,7 @@ SCRIPT
     sles11sp3.vm.provision :shell, :inline => "zypper addlock lustre-client*"
     sles11sp3.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0,mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     sles11sp3.vm.provision :reload
   end
