@@ -107,7 +107,7 @@ Vagrant.configure(2) do |config|
     centos6.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
     centos6.vm.network "private_network", ip: "10.0.4.20"
     centos6.vm.provider "virtualbox" do |v|
-      v.memory = 128
+      v.memory = 256  # mount.lustre: mount mds01@tcp0:mds02@tcp0:/testfs at /lustre failed: Cannot allocate memory
       v.cpus = 1
     end
   end
