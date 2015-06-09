@@ -118,7 +118,7 @@ Vagrant.configure(2) do |config|
     centos6_lustre18.vm.network "private_network", ip: "10.0.4.21"
     centos6_lustre18.vm.provider "virtualbox" do |v|
       v.memory = 256  # rpmbuild of lustre is greedy
-      v.cpus = 2
+      v.cpus = 1
     end
   end
   # centos7 client
@@ -137,16 +137,6 @@ Vagrant.configure(2) do |config|
     ubuntu12.vm.box_url = 'puppetlabs/ubuntu-12.04-64-nocm'
     ubuntu12.vm.network "private_network", ip: "10.0.4.40"
     ubuntu12.vm.provider "virtualbox" do |v|
-      v.memory = 128
-      v.cpus = 1
-    end
-  end
-  # sles11sp3 client
-  config.vm.define "sles11sp3" do |sles11sp3|
-    sles11sp3.vm.box = "suse/sles11sp3"
-    sles11sp3.vm.box_url = 'suse/sles11sp3'
-    sles11sp3.vm.network "private_network", ip: "10.0.4.70"
-    sles11sp3.vm.provider "virtualbox" do |v|
       v.memory = 128
       v.cpus = 1
     end
@@ -181,7 +171,6 @@ cat <<END >> /etc/hosts
 10.0.4.21 centos6_lustre18
 10.0.4.30 centos7
 10.0.4.40 ubuntu12
-10.0.4.70 sles11sp3
 END
 SCRIPT
   # provision puppet clients
@@ -237,17 +226,6 @@ enabled=1
 gpgcheck=0
 END
 SCRIPT
-  $lustre_client_sles11sp3 = <<SCRIPT
-cat <<'END' > /etc/zypp/repos.d/lustre_client.repo
-[lustre-client]
-name=SLE_11_SP3 - Lustre client
-enabled=1
-autorefresh=1
-baseurl=https://downloads.hpdd.intel.com/public/lustre/latest-feature-release/sles11sp3/client
-# https://jira.hpdd.intel.com/browse/LU-1354
-gpgcheck=0
-END
-SCRIPT
   # e2fsprogs
   # https://groups.google.com/forum/#!topic/lustre-discuss-list/U93Ja6Xkxfk
   $e2fsprogs_rhel = <<SCRIPT
@@ -258,17 +236,6 @@ name=CentOS-$releasever - e2fsprogs
 #baseurl=https://downloads.hpdd.intel.com/public/e2fsprogs/latest/el$releasever/RPMS/
 baseurl=http://build.whamcloud.com/job/e2fsprogs-master/arch=$basearch%2Cdistro=el$releasever/lastSuccessfulBuild/artifact/_topdir/RPMS/
 # https://groups.google.com/forum/#!topic/lustre-discuss-list/U93Ja6Xkxfk
-gpgcheck=0
-END
-SCRIPT
-  $e2fsprogs_sles11sp3 = <<SCRIPT
-cat <<'END' > /etc/zypp/repos.d/e2fsprogs.repo
-[e2fsprogs]
-name=SLE_11_SP3 - e2fsprogs
-enabled=1
-autorefresh=1
-baseurl=http://build.whamcloud.com/job/e2fsprogs-master/arch=x86_64%2Cdistro=sles11sp3/lastSuccessfulBuild/artifact/_topdir/RPMS
-# https://jira.hpdd.intel.com/browse/LU-1354
 gpgcheck=0
 END
 SCRIPT
@@ -483,18 +450,5 @@ SCRIPT
       s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
     end
     ubuntu12.vm.provision :reload
-  end
-  config.vm.define "sles11sp3" do |sles11sp3|
-    sles11sp3.vm.provision :shell, :inline => "hostname sles11sp3", run: "always"
-    sles11sp3.vm.provision :shell, :inline => $etc_hosts
-    sles11sp3.vm.provision :shell, :inline => $lustre_client_sles11sp3
-    sles11sp3.vm.provision :shell, :inline => "zypper addlock kernel*"
-    sles11sp3.vm.provision :shell, :inline => "zypper --non-interactive --gpg-auto-import-keys install lustre-client"
-    sles11sp3.vm.provision :shell, :inline => "zypper addlock lustre-client*"
-    sles11sp3.vm.provision "shell" do |s|
-      s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
-    end
-    sles11sp3.vm.provision :reload
   end
 end
