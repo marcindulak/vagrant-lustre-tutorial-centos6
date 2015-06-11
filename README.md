@@ -108,7 +108,7 @@ Test other clients::
         $ vagrant up centos6 centos6_lustre18 ubuntu12
         $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
         $ vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"
-        $ vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"
+        $ # vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"  # hangs
 
 Test (manual) failover of an OST::
 
