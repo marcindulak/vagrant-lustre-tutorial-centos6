@@ -39,14 +39,14 @@ Vagrant.configure(2) do |config|
       v.cpus = 1
     end
     mds02.vm.provider "virtualbox" do |vb|
-      if !File.exist?("mgs01.vdi")
-        vb.customize ["createhd", "--filename", "mgs01.vdi", "--size", 64, "--variant", "Fixed"]
-        vb.customize ["modifyhd", "mgs01.vdi", "--type", "shareable"]
+      if !File.exist?("mgs02.vdi")
+        vb.customize ["createhd", "--filename", "mgs02.vdi", "--size", 64, "--variant", "Fixed"]
+        vb.customize ["modifyhd", "mgs02.vdi", "--type", "shareable"]
       end
       vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "hdd", "--medium", "mgs01.vdi"]
-      if !File.exist?("mdt01.vdi")
-        vb.customize ["createhd", "--filename", "mdt01.vdi", "--size", 128, "--variant", "Fixed"]
-        vb.customize ["modifyhd", "mdt01.vdi", "--type", "shareable"]
+      if !File.exist?("mdt02.vdi")
+        vb.customize ["createhd", "--filename", "mdt02.vdi", "--size", 128, "--variant", "Fixed"]
+        vb.customize ["modifyhd", "mdt02.vdi", "--type", "shareable"]
       end
       vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 1, "--device", 0, "--type", "hdd", "--medium", "mdt01.vdi"]
     end
@@ -89,9 +89,9 @@ Vagrant.configure(2) do |config|
       v.cpus = 1
     end
     oss02.vm.provider "virtualbox" do |vb|
-      if !File.exist?("ost01.vdi")
-        vb.customize ["createhd", "--filename", "ost01.vdi", "--size", 768, "--variant", "Fixed"]
-        vb.customize ["modifyhd", "ost01.vdi", "--type", "shareable"]
+      if !File.exist?("ost02.vdi")
+        vb.customize ["createhd", "--filename", "ost02.vdi", "--size", 768, "--variant", "Fixed"]
+        vb.customize ["modifyhd", "ost02.vdi", "--type", "shareable"]
       end
       vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 1, "--device", 0, "--type", "hdd", "--medium", "ost01.vdi"]
       if !File.exist?("ost02.vdi")
