@@ -14,11 +14,11 @@ Vagrant.configure(2) do |config|
       v.cpus = 1
     end
     mds01.vm.provider "virtualbox" do |vb|
-      if !File.exist?("mgs01.vdi")
-        vb.customize ["createhd", "--filename", "mgs01.vdi", "--size", 64, "--variant", "Fixed"]
-        vb.customize ["modifyhd", "mgs01.vdi", "--type", "shareable"]
+      if !File.exist?("mgt01.vdi")
+        vb.customize ["createhd", "--filename", "mgt01.vdi", "--size", 64, "--variant", "Fixed"]
+        vb.customize ["modifyhd", "mgt01.vdi", "--type", "shareable"]
       end
-      vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "hdd", "--medium", "mgs01.vdi"]
+      vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "hdd", "--medium", "mgt01.vdi"]
       if !File.exist?("mdt01.vdi")
         vb.customize ["createhd", "--filename", "mdt01.vdi", "--size", 128, "--variant", "Fixed"]
         vb.customize ["modifyhd", "mdt01.vdi", "--type", "shareable"]
@@ -39,11 +39,11 @@ Vagrant.configure(2) do |config|
       v.cpus = 1
     end
     mds02.vm.provider "virtualbox" do |vb|
-      if !File.exist?("mgs01.vdi")
-        vb.customize ["createhd", "--filename", "mgs01.vdi", "--size", 64, "--variant", "Fixed"]
-        vb.customize ["modifyhd", "mgs01.vdi", "--type", "shareable"]
+      if !File.exist?("mgt01.vdi")
+        vb.customize ["createhd", "--filename", "mgt01.vdi", "--size", 64, "--variant", "Fixed"]
+        vb.customize ["modifyhd", "mgt01.vdi", "--type", "shareable"]
       end
-      vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "hdd", "--medium", "mgs01.vdi"]
+      vb.customize ["storageattach", :id, "--storagectl", "IDE Controller", "--port", 0, "--device", 1, "--type", "hdd", "--medium", "mgt01.vdi"]
       if !File.exist?("mdt01.vdi")
         vb.customize ["createhd", "--filename", "mdt01.vdi", "--size", 128, "--variant", "Fixed"]
         vb.customize ["modifyhd", "mdt01.vdi", "--type", "shareable"]
@@ -286,7 +286,7 @@ SCRIPT
     mds01.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --mgs --failnode=mds02@tcp0 /dev/sdb"
     mds01.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "/dev/sdb /lustre/mgs01 defaults"
+      s.args   = "/dev/sdb /lustre/mgt01 defaults"
     end
     # configure lustre metadata server
     mds01.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --mdt --index=0 --failnode=mds02@tcp0 --mgsnode=mds01@tcp0 --mgsnode=mds02@tcp0 /dev/sdc"
@@ -297,7 +297,7 @@ SCRIPT
     mds01.vm.provision :reload
     mds01.vm.provision :shell, :inline => $setenforce_0, run: "always"
     # start lustre management server
-    #mds01.vm.provision :shell, :inline => "mount /lustre/mgs01", run: "always"
+    #mds01.vm.provision :shell, :inline => "mount /lustre/mgt01", run: "always"
     # start lustre metadata server
     #mds01.vm.provision :shell, :inline => "mount /lustre/mdt01", run: "always"
   end

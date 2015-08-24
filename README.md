@@ -10,7 +10,7 @@ http://www.dell.com/downloads/global/solutions/200-DELL-CAMBRIDGE-SOLUTIONS-WHIT
                 |       MGS/MDS Module      |
                 |                           |
                 |        -----------        |
-                |MGS01 <-|         |->      |
+                |MGT01 <-|         |->      |
                 |MDT01 <-| Shared  |->      |
                 |  |     | Storage |     |  |
                 |  |     |         |     |  |
