@@ -110,6 +110,14 @@ Test other clients::
         $ vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"
         $ # vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"  # hangs
 
+Test vagrant user access to the filesystem::
+
+        $ vagrant ssh centos6 -c "sudo su -c 'mkdir /lustre/vagrant'"
+        $ vagrant ssh centos6 -c "sudo su -c 'chown vagrant.vagrant /lustre/vagrant'"
+        $ vagrant ssh centos6 -c "sudo su - vagrant -c 'touch /lustre/vagrant/testfile'"
+
+*Note*: users' uid/gid on the client must agree with those on mds.
+
 Test (manual) failover of an OST::
 
         $ vagrant ssh oss02 -c "sudo su -c 'umount /lustre/ost02'"

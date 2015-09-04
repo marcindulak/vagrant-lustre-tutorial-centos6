@@ -105,6 +105,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos6" do |centos6|
     centos6.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
+    centos6.vm.box_version = '1.0.1'  # must match kernel used to build lustre
     centos6.vm.network "private_network", ip: "10.0.4.20"
     centos6.vm.provider "virtualbox" do |v|
       v.memory = 256  # mount.lustre: mount mds01@tcp0:mds02@tcp0:/testfs at /lustre failed: Cannot allocate memory
@@ -115,6 +116,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos6_lustre18" do |centos6_lustre18|
     centos6_lustre18.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6_lustre18.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
+    centos6_lustre18.vm.box_version = '1.0.1'  # must match kernel used to build lustre
     centos6_lustre18.vm.network "private_network", ip: "10.0.4.21"
     centos6_lustre18.vm.provider "virtualbox" do |v|
       v.memory = 256  # rpmbuild of lustre is greedy
@@ -125,6 +127,7 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos7" do |centos7|
     centos7.vm.box = "puppetlabs/centos-7.0-64-nocm"
     centos7.vm.box_url = 'puppetlabs/centos-7.0-64-nocm'
+    centos7.vm.box_version = '1.0.1'  # must match kernel used to build lustre
     centos7.vm.network "private_network", ip: "10.0.4.30"
     centos7.vm.provider "virtualbox" do |v|
       v.memory = 128
