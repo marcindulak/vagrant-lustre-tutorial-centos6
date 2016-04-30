@@ -318,7 +318,7 @@ SCRIPT
     mds02.vm.provision :shell, :inline => "hostname mds02", run: "always"
     mds02.vm.provision :shell, :inline => $etc_hosts
     mds02.vm.provision :shell, :inline => $epel6
-    mds01.vm.provision :shell, :inline => $zfs_epel6
+    mds02.vm.provision :shell, :inline => $zfs_epel6
     mds02.vm.provision :shell, :inline => $lustre_server_rhel
     mds02.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds02.vm.provision :shell, :inline => $lustre_kernel_install
