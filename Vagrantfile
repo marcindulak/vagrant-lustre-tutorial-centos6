@@ -337,7 +337,7 @@ SCRIPT
     oss01.vm.provision :shell, :inline => "hostname oss01", run: "always"
     oss01.vm.provision :shell, :inline => $etc_hosts
     oss01.vm.provision :shell, :inline => $epel6
-    mds01.vm.provision :shell, :inline => $zfs_epel6
+    oss01.vm.provision :shell, :inline => $zfs_epel6
     oss01.vm.provision :shell, :inline => $lustre_server_rhel
     oss01.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss01.vm.provision :shell, :inline => $lustre_kernel_install
@@ -364,7 +364,7 @@ SCRIPT
     oss02.vm.provision :shell, :inline => "hostname oss02", run: "always"
     oss02.vm.provision :shell, :inline => $etc_hosts
     oss02.vm.provision :shell, :inline => $epel6
-    mds01.vm.provision :shell, :inline => $zfs_epel6
+    oss02.vm.provision :shell, :inline => $zfs_epel6
     oss02.vm.provision :shell, :inline => $lustre_server_rhel
     oss02.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss02.vm.provision :shell, :inline => $lustre_kernel_install
