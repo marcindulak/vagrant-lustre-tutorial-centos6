@@ -105,7 +105,10 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos6" do |centos6|
     centos6.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
-    centos6.vm.box_version = '1.0.1'  # must match kernel used to build lustre
+    # installing new kernel removes virtualbox guest additions
+    centos6.vm.synced_folder ".", "/vagrant", disabled: true
+    #centos6.vm.box_version = '1.0.1'  # lustre-2.7 - must match kernel used to build lustre
+    centos6.vm.box_version = '1.0.3'  # lustre-2.8 - must match kernel used to build lustre
     centos6.vm.network "private_network", ip: "10.0.4.20"
     centos6.vm.provider "virtualbox" do |v|
       v.memory = 256  # mount.lustre: mount mds01@tcp0:mds02@tcp0:/testfs at /lustre failed: Cannot allocate memory
@@ -116,7 +119,6 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos6_lustre18" do |centos6_lustre18|
     centos6_lustre18.vm.box = "puppetlabs/centos-6.6-64-nocm"
     centos6_lustre18.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
-    centos6_lustre18.vm.box_version = '1.0.1'  # must match kernel used to build lustre
     centos6_lustre18.vm.network "private_network", ip: "10.0.4.21"
     centos6_lustre18.vm.provider "virtualbox" do |v|
       v.memory = 256  # rpmbuild of lustre is greedy
@@ -125,12 +127,12 @@ Vagrant.configure(2) do |config|
   end
   # centos7 client
   config.vm.define "centos7" do |centos7|
-    centos7.vm.box = "puppetlabs/centos-7.0-64-nocm"
-    centos7.vm.box_url = 'puppetlabs/centos-7.0-64-nocm'
-    centos7.vm.box_version = '1.0.1'  # must match kernel used to build lustre
+    centos7.vm.box = "puppetlabs/centos-7.2-64-nocm"
+    centos7.vm.box_url = 'puppetlabs/centos-7.2-64-nocm'
+    centos7.vm.box_version = '1.0.1'  # lustre-2.8 - must match kernel used to build lustre
     centos7.vm.network "private_network", ip: "10.0.4.30"
     centos7.vm.provider "virtualbox" do |v|
-      v.memory = 128
+      v.memory = 256
       v.cpus = 1
     end
   end
@@ -393,8 +395,9 @@ SCRIPT
     centos6.vm.provision :shell, :inline => $epel6
     centos6.vm.provision :shell, :inline => $lustre_client_rhel
     centos6.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
-    centos6.vm.provision :shell, :inline => $kernel_version_lock
+    # install lustre-client and then lock the kernel version
     centos6.vm.provision :shell, :inline => "yum -y install lustre-client"
+    centos6.vm.provision :shell, :inline => $kernel_version_lock
     centos6.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos6.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
@@ -408,6 +411,7 @@ SCRIPT
     centos6_lustre18.vm.provision :shell, :inline => $etc_hosts
     centos6_lustre18.vm.provision :shell, :inline => $epel6
     centos6_lustre18.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
+    # lock the default kernel version
     centos6_lustre18.vm.provision :shell, :inline => $kernel_version_lock
     centos6_lustre18.vm.provision :shell, :inline => "yum -y install wget"
     centos6_lustre18.vm.provision :shell, :inline => "wget https://downloads.hpdd.intel.com/public/lustre/lustre-1.8.9-wc1/el6/client/SRPMS/lustre-client-1.8.9-wc1_2.6.32_279.19.1.el6.x86_64.src.rpm"
@@ -446,6 +450,7 @@ SCRIPT
     centos7.vm.provision :shell, :inline => $epel7
     centos7.vm.provision :shell, :inline => $lustre_client_rhel
     centos7.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
+    # lock the default kernel version
     centos7.vm.provision :shell, :inline => $kernel_version_lock
     centos7.vm.provision :shell, :inline => "yum -y install lustre-client"
     centos7.vm.provision :shell, :inline => "yum versionlock lustre-client"
