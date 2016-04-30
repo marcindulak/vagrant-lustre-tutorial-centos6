@@ -195,6 +195,14 @@ baseurl=https://downloads.hpdd.intel.com/public/lustre/latest-feature-release/el
 gpgcheck=0
 END
 SCRIPT
+  $zfs_epel6 = <<SCRIPT
+# lustre-osd-zfs-2.8.0 (lustre-server) Requires: zfs-kmod
+yum -y install http://archive.zfsonlinux.org/epel/zfs-release.el6.noarch.rpm
+SCRIPT
+  $zfs_epel7 = <<SCRIPT
+# lustre-osd-zfs-2.8.0 (lustre-server) Requires: zfs-kmod
+yum -y install http://archive.zfsonlinux.org/epel/zfs-release.el7.noarch.rpm
+SCRIPT
   $lustre_client_rhel = <<SCRIPT
 yum clean all
 cat <<'END' > /etc/yum.repos.d/lustre_client.repo
@@ -237,8 +245,8 @@ yum clean all
 cat <<'END' > /etc/yum.repos.d/e2fsprogs.repo
 [e2fsprogs]
 name=CentOS-$releasever - e2fsprogs
-#baseurl=https://downloads.hpdd.intel.com/public/e2fsprogs/latest/el$releasever/RPMS/
-baseurl=http://build.whamcloud.com/job/e2fsprogs-master/arch=$basearch%2Cdistro=el$releasever/lastSuccessfulBuild/artifact/_topdir/RPMS/
+baseurl=https://downloads.hpdd.intel.com/public/e2fsprogs/latest/el$releasever/
+#baseurl=http://build.whamcloud.com/job/e2fsprogs-master/arch=$basearch%2Cdistro=el$releasever/lastSuccessfulBuild/artifact/_topdir/RPMS/
 # https://groups.google.com/forum/#!topic/lustre-discuss-list/U93Ja6Xkxfk
 gpgcheck=0
 END
@@ -275,12 +283,13 @@ SCRIPT
     mds01.vm.provision :shell, :inline => "hostname mds01", run: "always"
     mds01.vm.provision :shell, :inline => $etc_hosts
     mds01.vm.provision :shell, :inline => $epel6
+    mds01.vm.provision :shell, :inline => $zfs_epel6
     mds01.vm.provision :shell, :inline => $lustre_server_rhel
     mds01.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds01.vm.provision :shell, :inline => $lustre_kernel_install
     mds01.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     mds01.vm.provision :shell, :inline => $kernel_version_lock
-    mds01.vm.provision :shell, :inline => "yum -y install lustre lustre-tests"
+    mds01.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs* lustre-tests"
     mds01.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     mds01.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     mds01.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -309,12 +318,13 @@ SCRIPT
     mds02.vm.provision :shell, :inline => "hostname mds02", run: "always"
     mds02.vm.provision :shell, :inline => $etc_hosts
     mds02.vm.provision :shell, :inline => $epel6
+    mds01.vm.provision :shell, :inline => $zfs_epel6
     mds02.vm.provision :shell, :inline => $lustre_server_rhel
     mds02.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds02.vm.provision :shell, :inline => $lustre_kernel_install
     mds02.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     mds02.vm.provision :shell, :inline => $kernel_version_lock
-    mds02.vm.provision :shell, :inline => "yum -y install lustre lustre-tests"
+    mds02.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs* lustre-tests"
     mds02.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     mds02.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     mds02.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -327,12 +337,13 @@ SCRIPT
     oss01.vm.provision :shell, :inline => "hostname oss01", run: "always"
     oss01.vm.provision :shell, :inline => $etc_hosts
     oss01.vm.provision :shell, :inline => $epel6
+    mds01.vm.provision :shell, :inline => $zfs_epel6
     oss01.vm.provision :shell, :inline => $lustre_server_rhel
     oss01.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss01.vm.provision :shell, :inline => $lustre_kernel_install
     oss01.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     oss01.vm.provision :shell, :inline => $kernel_version_lock
-    oss01.vm.provision :shell, :inline => "yum -y install lustre"
+    oss01.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs*"
     oss01.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     oss01.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     oss01.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -353,12 +364,13 @@ SCRIPT
     oss02.vm.provision :shell, :inline => "hostname oss02", run: "always"
     oss02.vm.provision :shell, :inline => $etc_hosts
     oss02.vm.provision :shell, :inline => $epel6
+    mds01.vm.provision :shell, :inline => $zfs_epel6
     oss02.vm.provision :shell, :inline => $lustre_server_rhel
     oss02.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss02.vm.provision :shell, :inline => $lustre_kernel_install
     oss02.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     oss02.vm.provision :shell, :inline => $kernel_version_lock
-    oss02.vm.provision :shell, :inline => "yum -y install lustre"
+    oss02.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs*"
     oss02.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     oss02.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     oss02.vm.provision :shell, :inline => "chkconfig lnet on"
