@@ -291,7 +291,11 @@ SCRIPT
     mds01.vm.provision :shell, :inline => $lustre_kernel_install
     mds01.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     mds01.vm.provision :shell, :inline => $kernel_version_lock
-    mds01.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs* lustre-tests"
+    # Failed to initialize ZFS library
+    # mkfs.lustre FATAL: 
+    #unhandled/unloaded fs type 1 'ldiskfs'
+    #mds01.vm.provision :shell, :inline => "yum -y install lustre-osd-zfs* lustre e2fsprogs* lustre-tests"
+    mds01.vm.provision :shell, :inline => "yum -y install lustre-osd-ldiskfs* lustre e2fsprogs* lustre-tests"
     mds01.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     mds01.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     mds01.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -301,13 +305,13 @@ SCRIPT
     mds01.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --mgs --failnode=mds02@tcp0 /dev/sdb"
     mds01.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "/dev/sdb /lustre/mgt01 defaults"
+      s.args   = ["/dev/sdb", "/lustre/mgt01", "defaults"]
     end
     # configure lustre metadata server
     mds01.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --mdt --index=0 --failnode=mds02@tcp0 --mgsnode=mds01@tcp0 --mgsnode=mds02@tcp0 /dev/sdc"
     mds01.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "/dev/sdc /lustre/mdt01 defaults"
+      s.args   = ["/dev/sdc", "/lustre/mdt01", "defaults"]
     end
     mds01.vm.provision :reload
     mds01.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -326,7 +330,11 @@ SCRIPT
     mds02.vm.provision :shell, :inline => $lustre_kernel_install
     mds02.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     mds02.vm.provision :shell, :inline => $kernel_version_lock
-    mds02.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs* lustre-tests"
+    # Failed to initialize ZFS library
+    # mkfs.lustre FATAL: 
+    #unhandled/unloaded fs type 1 'ldiskfs'
+    #mds02.vm.provision :shell, :inline => "yum -y install lustre-osd-zfs* lustre e2fsprogs* lustre-tests"
+    mds02.vm.provision :shell, :inline => "yum -y install lustre-osd-ldiskfs* lustre e2fsprogs* lustre-tests"
     mds02.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     mds02.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     mds02.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -345,7 +353,11 @@ SCRIPT
     oss01.vm.provision :shell, :inline => $lustre_kernel_install
     oss01.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     oss01.vm.provision :shell, :inline => $kernel_version_lock
-    oss01.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs*"
+    # Failed to initialize ZFS library
+    # mkfs.lustre FATAL: 
+    #unhandled/unloaded fs type 1 'ldiskfs'
+    #oss01.vm.provision :shell, :inline => "yum -y install lustre-osd-zfs* lustre e2fsprogs*"
+    oss01.vm.provision :shell, :inline => "yum -y install lustre-osd-ldiskfs* lustre e2fsprogs*"
     oss01.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     oss01.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     oss01.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -355,7 +367,7 @@ SCRIPT
     oss01.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --ost --index=0 --failnode=oss02@tcp0 --mgsnode=mds01@tcp0 --mgsnode=mds02@tcp0 /dev/sdb"
     oss01.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "/dev/sdb /lustre/ost01 defaults"
+      s.args   = ["/dev/sdb", "/lustre/ost01", "defaults"]
     end
     oss01.vm.provision :reload
     oss01.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -372,7 +384,11 @@ SCRIPT
     oss02.vm.provision :shell, :inline => $lustre_kernel_install
     oss02.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     oss02.vm.provision :shell, :inline => $kernel_version_lock
-    oss02.vm.provision :shell, :inline => "yum -y install lustre e2fsprogs*"
+    # Failed to initialize ZFS library
+    # mkfs.lustre FATAL: 
+    #unhandled/unloaded fs type 1 'ldiskfs'
+    #oss02.vm.provision :shell, :inline => "yum -y install lustre-osd-zfs* lustre e2fsprogs*"
+    oss02.vm.provision :shell, :inline => "yum -y install lustre-osd-ldiskfs* lustre e2fsprogs*"
     oss02.vm.provision :shell, :inline => "yum versionlock lustre* e2fsprogs* libcom* libss libss-devel"
     oss02.vm.provision :shell, :inline => $etc_modprobe_d_lnet
     oss02.vm.provision :shell, :inline => "chkconfig lnet on"
@@ -382,7 +398,7 @@ SCRIPT
     oss02.vm.provision :shell, :inline => "mkfs.lustre --reformat --fsname=testfs --ost --index=1 --failnode=oss01@tcp0 --mgsnode=mds01@tcp0 --mgsnode=mds02@tcp0 /dev/sdc"
     oss02.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "/dev/sdc /lustre/ost02 defaults"
+      s.args   = ["/dev/sdc", "/lustre/ost02", "defaults"]
     end
     oss02.vm.provision :reload
     oss02.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -401,7 +417,7 @@ SCRIPT
     centos6.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos6.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
     centos6.vm.provision :reload
     centos6.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -439,7 +455,7 @@ SCRIPT
     centos6_lustre18.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos6_lustre18.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
     centos6_lustre18.vm.provision :reload
     centos6_lustre18.vm.provision :shell, :inline => $setenforce_0, run: "always"
@@ -456,7 +472,7 @@ SCRIPT
     centos7.vm.provision :shell, :inline => "yum versionlock lustre-client"
     centos7.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
     centos7.vm.provision :reload
     centos7.vm.provision :shell, :inline => $systemctl_stop_firewalld, run: "always"
@@ -468,7 +484,7 @@ SCRIPT
     ubuntu12.vm.provision :shell, :inline => "apt-get -y install lustre-utils"
     ubuntu12.vm.provision "shell" do |s|
       s.inline = $etc_fstab_lustre
-      s.args   = "'mds01@tcp0:mds02@tcp0:/testfs' /lustre 'defaults,_netdev,localflock,user_xattr'"
+      s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
     ubuntu12.vm.provision :reload
   end
