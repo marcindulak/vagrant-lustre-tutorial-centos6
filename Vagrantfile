@@ -107,8 +107,6 @@ Vagrant.configure(2) do |config|
     centos6.vm.box_url = 'puppetlabs/centos-6.6-64-nocm'
     # installing new kernel removes virtualbox guest additions
     centos6.vm.synced_folder ".", "/vagrant", disabled: true
-    #centos6.vm.box_version = '1.0.1'  # lustre-2.7 - must match kernel used to build lustre
-    centos6.vm.box_version = '1.0.3'  # lustre-2.8 - must match kernel used to build lustre
     centos6.vm.network "private_network", ip: "10.0.4.20"
     centos6.vm.provider "virtualbox" do |v|
       v.memory = 256  # mount.lustre: mount mds01@tcp0:mds02@tcp0:/testfs at /lustre failed: Cannot allocate memory
@@ -129,7 +127,6 @@ Vagrant.configure(2) do |config|
   config.vm.define "centos7" do |centos7|
     centos7.vm.box = "puppetlabs/centos-7.2-64-nocm"
     centos7.vm.box_url = 'puppetlabs/centos-7.2-64-nocm'
-    centos7.vm.box_version = '1.0.1'  # lustre-2.8 - must match kernel used to build lustre
     centos7.vm.network "private_network", ip: "10.0.4.30"
     centos7.vm.provider "virtualbox" do |v|
       v.memory = 256
@@ -204,6 +201,21 @@ SCRIPT
   $zfs_epel7 = <<SCRIPT
 # lustre-osd-zfs-2.8.0 (lustre-server) Requires: zfs-kmod
 yum -y install http://archive.zfsonlinux.org/epel/zfs-release.el7.noarch.rpm
+SCRIPT
+  # CentOS vault (specific version of the kernel needed by lustre)
+  $centos_vault = <<SCRIPT
+RELEASE=$1
+yum clean all
+cat <<END > /etc/yum.repos.d/vault.repo
+[vault]
+name=CentOS-$RELEASE - vault
+baseurl=http://vault.centos.org/$RELEASE/os/\\$basearch/
+gpgcheck=1
+[vault-updates]
+name=CentOS-$RELEASE - vault-updates
+baseurl=http://vault.centos.org/$RELEASE/updates/\\$basearch/
+gpgcheck=1
+END
 SCRIPT
   $lustre_client_rhel = <<SCRIPT
 yum clean all
@@ -392,6 +404,11 @@ SCRIPT
     centos6.vm.provision :shell, :inline => $lustre_client_rhel
     centos6.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # install lustre-client and then lock the kernel version
+    centos6.vm.provision "shell" do |s|
+      s.inline = $centos_vault
+      # kernel-2.6.32-573.12.1.el6 needed by lustre-2.8.0 in CentOS-6.7
+      s.args   = ["6.7"]
+    end
     centos6.vm.provision :shell, :inline => "yum -y install lustre-client"
     centos6.vm.provision :shell, :inline => $kernel_version_lock
     centos6.vm.provision :shell, :inline => "yum versionlock lustre-client"
@@ -447,6 +464,11 @@ SCRIPT
     centos7.vm.provision :shell, :inline => $lustre_client_rhel
     centos7.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # lock the default kernel version
+    #centos7.vm.provision "shell" do |s|
+    #  s.inline = $centos_vault
+    #  # kernel-3.10.0_327.3.1.el7.x86_64 needed by lustre-2.8.0 in CentOS-7.2.1511
+    #  s.args   = ["7.2.1511"]
+    #end
     centos7.vm.provision :shell, :inline => $kernel_version_lock
     centos7.vm.provision :shell, :inline => "yum -y install lustre-client"
     centos7.vm.provision :shell, :inline => "yum versionlock lustre-client"
