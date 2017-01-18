@@ -62,7 +62,7 @@ https://www.virtualbox.org/ https://www.vagrantup.com/downloads.html::
         $ vagrant up oss02 && sleep 10 && vagrant reload oss02
         $ vagrant up centos7 && sleep 10 && vagrant reload centos7
 
-*Note*: vagrant-reload plugin is no longer maintained so we cannot a VM reload from within Vagrantfile
+*Note*: vagrant-reload plugin is no longer maintained so we cannot reload a VM from within Vagrantfile
 (see https://github.com/aidanns/vagrant-reload/issues/6) and we need to use `up` followed by `reload` explicitly.
 
 Test the basic funcionality of the lustre filesystem with, e.g.::
