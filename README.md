@@ -56,11 +56,11 @@ https://www.virtualbox.org/ https://www.vagrantup.com/downloads.html::
 
         $ git clone https://github.com/marcindulak/vagrant-lustre-tutorial.git
         $ cd vagrant-lustre-tutorial
-	$ vagrant up mds01 && sleep 10 && vagrant reload mds01
-	$ vagrant up mds02 && sleep 10 && vagrant reload mds02
-	$ vagrant up oss01 && sleep 10 && vagrant reload oss01
-	$ vagrant up oss02 && sleep 10 && vagrant reload oss02
-	$ vagrant up centos7 && sleep 10 && vagrant reload centos7
+        $ vagrant up mds01 && sleep 10 && vagrant reload mds01
+        $ vagrant up mds02 && sleep 10 && vagrant reload mds02
+        $ vagrant up oss01 && sleep 10 && vagrant reload oss01
+        $ vagrant up oss02 && sleep 10 && vagrant reload oss02
+        $ vagrant up centos7 && sleep 10 && vagrant reload centos7
 
 *Note*: vagrant-reload plugin is no longer maintained so we cannot a VM reload from within Vagrantfile
 (see https://github.com/aidanns/vagrant-reload/issues/6) and we need to use `up` followed by `reload` explicitly.
@@ -112,7 +112,7 @@ Other benchmarks from http://www.opensfs.org/wp-content/uploads/2013/04/LIND_LUG
 Test other clients::
 
         $ vagrant up centos6 centos6_lustre18 ubuntu12
-	$ vagrant reload centos6 centos6_lustre18 ubuntu12
+        $ vagrant reload centos6 centos6_lustre18 ubuntu12
         $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
         $ # vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"  # this build seems not working with lustre-2.8: mds01 says "... is it running a compatible version of Lustre ..."
         $ # vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"  # hangs with lustre-2.7
