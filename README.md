@@ -2,7 +2,7 @@
 Description
 -----------
 
-Installs and configures Lustre latest-feature-release server and clients.
+Installs and configures Lustre 2.8.0 server and clients.
 The configuration is a simplified setup inspired by
 http://www.dell.com/downloads/global/solutions/200-DELL-CAMBRIDGE-SOLUTIONS-WHITEPAPER-20072010b.pdf
      
@@ -56,8 +56,14 @@ https://www.virtualbox.org/ https://www.vagrantup.com/downloads.html::
 
         $ git clone https://github.com/marcindulak/vagrant-lustre-tutorial.git
         $ cd vagrant-lustre-tutorial
-        $ vagrant plugin install vagrant-reload
-        $ vagrant up mds01 mds02 oss01 oss02 centos7  # this takes a couple of hours!
+	$ vagrant up mds01 && sleep 10 && vagrant reload mds01
+	$ vagrant up mds02 && sleep 10 && vagrant reload mds02
+	$ vagrant up oss01 && sleep 10 && vagrant reload oss01
+	$ vagrant up oss02 && sleep 10 && vagrant reload oss02
+	$ vagrant up centos7 && sleep 10 && vagrant reload centos7
+
+*Note*: vagrant-reload plugin is no longer maintained so we cannot a VM reload from within Vagrantfile
+(see https://github.com/aidanns/vagrant-reload/issues/6) and we need to use `up` followed by `reload` explicitly.
 
 Test the basic funcionality of the lustre filesystem with, e.g.::
 
@@ -106,6 +112,7 @@ Other benchmarks from http://www.opensfs.org/wp-content/uploads/2013/04/LIND_LUG
 Test other clients::
 
         $ vagrant up centos6 centos6_lustre18 ubuntu12
+	$ vagrant reload centos6 centos6_lustre18 ubuntu12
         $ vagrant ssh centos6 -c "sudo su -c 'lfs df -h'"
         $ # vagrant ssh centos6_lustre18 -c "sudo su -c 'lfs df -h'"  # this build seems not working with lustre-2.8: mds01 says "... is it running a compatible version of Lustre ..."
         $ # vagrant ssh ubuntu12 -c "sudo su -c 'lfs df -h'"  # hangs with lustre-2.7
@@ -137,7 +144,7 @@ When done, destroy the test machines with::
 Dependencies
 ------------
 
-vagrant plugin install vagrant-reload
+None
 
 
 -------

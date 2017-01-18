@@ -181,7 +181,7 @@ SCRIPT
 yum -y install http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 SCRIPT
   $epel7 = <<SCRIPT
-yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-8.noarch.rpm
+yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
 SCRIPT
   # lustre rhel repos
   $lustre_server_rhel = <<SCRIPT
@@ -189,7 +189,7 @@ yum clean all
 cat <<'END' > /etc/yum.repos.d/lustre_server.repo
 [lustre-server]
 name=CentOS-$releasever - Lustre server
-baseurl=https://downloads.hpdd.intel.com/public/lustre/latest-feature-release/el$releasever/server/
+baseurl=https://downloads.hpdd.intel.com/public/lustre/lustre-2.8.0/el$releasever/server/
 # https://jira.hpdd.intel.com/browse/LU-1354
 gpgcheck=0
 END
@@ -222,7 +222,7 @@ yum clean all
 cat <<'END' > /etc/yum.repos.d/lustre_client.repo
 [lustre-client]
 name=CentOS-$releasever - Lustre client
-baseurl=https://downloads.hpdd.intel.com/public/lustre/latest-feature-release/el$releasever/client/
+baseurl=https://downloads.hpdd.intel.com/public/lustre/lustre-2.8.0/el$releasever/client/
 # https://jira.hpdd.intel.com/browse/LU-1354
 gpgcheck=0
 END
@@ -297,6 +297,8 @@ SCRIPT
     mds01.vm.provision :shell, :inline => "hostname mds01", run: "always"
     mds01.vm.provision :shell, :inline => $etc_hosts
     mds01.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    mds01.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     mds01.vm.provision :shell, :inline => $lustre_server_rhel
     mds01.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds01.vm.provision :shell, :inline => $lustre_kernel_install
@@ -320,7 +322,9 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["/dev/sdc", "/lustre/mdt01", "defaults"]
     end
-    mds01.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #mds01.vm.provision :reload
+    #mds01.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     mds01.vm.provision :shell, :inline => $setenforce_0, run: "always"
     # start lustre management server
     #mds01.vm.provision :shell, :inline => "mount /lustre/mgt01", run: "always"
@@ -331,6 +335,8 @@ SCRIPT
     mds02.vm.provision :shell, :inline => "hostname mds02", run: "always"
     mds02.vm.provision :shell, :inline => $etc_hosts
     mds02.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    mds02.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     mds02.vm.provision :shell, :inline => $lustre_server_rhel
     mds02.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds02.vm.provision :shell, :inline => $lustre_kernel_install
@@ -342,13 +348,17 @@ SCRIPT
     mds02.vm.provision :shell, :inline => "chkconfig lnet on"
     mds02.vm.provision :shell, :inline => "chkconfig lustre on"
     mds02.vm.provision :shell, :inline => "chkconfig iptables off"
-    mds02.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #mds02.vm.provision :reload
+    #mds02.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     mds02.vm.provision :shell, :inline => $setenforce_0, run: "always"
   end
   config.vm.define "oss01" do |oss01|
     oss01.vm.provision :shell, :inline => "hostname oss01", run: "always"
     oss01.vm.provision :shell, :inline => $etc_hosts
     oss01.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    oss01.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     oss01.vm.provision :shell, :inline => $lustre_server_rhel
     oss01.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss01.vm.provision :shell, :inline => $lustre_kernel_install
@@ -366,7 +376,9 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["/dev/sdb", "/lustre/ost01", "defaults"]
     end
-    oss01.vm.provision :reload
+    # # https://github.com/aidanns/vagrant-reload/issues/6
+    #oss01.vm.provision :reload
+    #oss01.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     oss01.vm.provision :shell, :inline => $setenforce_0, run: "always"
     # start lustre object storage targets
     #oss01.vm.provision :shell, :inline => "mount /lustre/ost01", run: "always"
@@ -375,6 +387,8 @@ SCRIPT
     oss02.vm.provision :shell, :inline => "hostname oss02", run: "always"
     oss02.vm.provision :shell, :inline => $etc_hosts
     oss02.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    oss02.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     oss02.vm.provision :shell, :inline => $lustre_server_rhel
     oss02.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss02.vm.provision :shell, :inline => $lustre_kernel_install
@@ -392,7 +406,9 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["/dev/sdc", "/lustre/ost02", "defaults"]
     end
-    oss02.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #oss02.vm.provision :reload
+    #oss02.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     oss02.vm.provision :shell, :inline => $setenforce_0, run: "always"
     # start lustre object storage targets
     #oss02.vm.provision :shell, :inline => "mount /lustre/ost02", run: "always"
@@ -401,6 +417,8 @@ SCRIPT
     centos6.vm.provision :shell, :inline => "hostname centos6", run: "always"
     centos6.vm.provision :shell, :inline => $etc_hosts
     centos6.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    centos6.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos6.vm.provision :shell, :inline => $lustre_client_rhel
     centos6.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # install lustre-client and then lock the kernel version
@@ -416,13 +434,17 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
-    centos6.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #centos6.vm.provision :reload
+    #centos6.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     centos6.vm.provision :shell, :inline => $setenforce_0, run: "always"
   end
   config.vm.define "centos6_lustre18" do |centos6_lustre18|
     centos6_lustre18.vm.provision :shell, :inline => "hostname centos6_lustre18", run: "always"
     centos6_lustre18.vm.provision :shell, :inline => $etc_hosts
     centos6_lustre18.vm.provision :shell, :inline => $epel6
+    # [Errno 14] problem making ssl connection
+    centos6_lustre18.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos6_lustre18.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # lock the default kernel version
     centos6_lustre18.vm.provision :shell, :inline => $kernel_version_lock
@@ -454,21 +476,25 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
+    # https://github.com/aidanns/vagrant-reload/issues/6
     centos6_lustre18.vm.provision :reload
+    #centos6_lustre18.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     centos6_lustre18.vm.provision :shell, :inline => $setenforce_0, run: "always"
   end
   config.vm.define "centos7" do |centos7|
     centos7.vm.provision :shell, :inline => "hostname centos7", run: "always"
     centos7.vm.provision :shell, :inline => $etc_hosts
     centos7.vm.provision :shell, :inline => $epel7
+    # [Errno 14] problem making ssl connection
+    centos7.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos7.vm.provision :shell, :inline => $lustre_client_rhel
     centos7.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # lock the default kernel version
-    #centos7.vm.provision "shell" do |s|
-    #  s.inline = $centos_vault
-    #  # kernel-3.10.0_327.3.1.el7.x86_64 needed by lustre-2.8.0 in CentOS-7.2.1511
-    #  s.args   = ["7.2.1511"]
-    #end
+    centos7.vm.provision "shell" do |s|
+      s.inline = $centos_vault
+      # kernel-3.10.0_327.3.1.el7.x86_64 needed by lustre-2.8.0 in CentOS-7.2.1511
+      s.args   = ["7.2.1511"]
+    end
     centos7.vm.provision :shell, :inline => $kernel_version_lock
     centos7.vm.provision :shell, :inline => "yum -y install lustre-client"
     centos7.vm.provision :shell, :inline => "yum versionlock lustre-client"
@@ -476,7 +502,9 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
-    centos7.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #centos7.vm.provision :reload
+    #centos7.vm.provision :shell, :inline => "reboot"  # this gives exit 1
     centos7.vm.provision :shell, :inline => $systemctl_stop_firewalld, run: "always"
     centos7.vm.provision :shell, :inline => $setenforce_0, run: "always"
   end
@@ -488,6 +516,8 @@ SCRIPT
       s.inline = $etc_fstab_lustre
       s.args   = ["mds01@tcp0:mds02@tcp0:/testfs", "/lustre", "defaults,_netdev,localflock,user_xattr"]
     end
-    ubuntu12.vm.provision :reload
+    # https://github.com/aidanns/vagrant-reload/issues/6
+    #ubuntu12.vm.provision :reload
+    #ubuntu12.vm.provision :shell, :inline => "reboot"  # this gives exit 1
   end
 end
