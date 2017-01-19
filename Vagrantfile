@@ -293,12 +293,17 @@ yum versionlock add kernel-firmware
 yum versionlock add kernel-devel
 yum versionlock add kernel-headers
 SCRIPT
+  # [Errno 14] problem making ssl connection
+  $yum_problem_making_ssl_connection = <<SCRIPT
+# [Errno 14] problem making ssl connection
+yum -y update nss* ca-certificates pycurl
+yum clean all
+SCRIPT
   config.vm.define "mds01" do |mds01|
     mds01.vm.provision :shell, :inline => "hostname mds01", run: "always"
     mds01.vm.provision :shell, :inline => $etc_hosts
+    mds01.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     mds01.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    mds01.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     mds01.vm.provision :shell, :inline => $lustre_server_rhel
     mds01.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds01.vm.provision :shell, :inline => $lustre_kernel_install
@@ -334,9 +339,8 @@ SCRIPT
   config.vm.define "mds02" do |mds02|
     mds02.vm.provision :shell, :inline => "hostname mds02", run: "always"
     mds02.vm.provision :shell, :inline => $etc_hosts
+    mds02.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     mds02.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    mds02.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     mds02.vm.provision :shell, :inline => $lustre_server_rhel
     mds02.vm.provision :shell, :inline => $e2fsprogs_rhel
     mds02.vm.provision :shell, :inline => $lustre_kernel_install
@@ -356,9 +360,8 @@ SCRIPT
   config.vm.define "oss01" do |oss01|
     oss01.vm.provision :shell, :inline => "hostname oss01", run: "always"
     oss01.vm.provision :shell, :inline => $etc_hosts
+    oss01.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     oss01.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    oss01.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     oss01.vm.provision :shell, :inline => $lustre_server_rhel
     oss01.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss01.vm.provision :shell, :inline => $lustre_kernel_install
@@ -386,9 +389,8 @@ SCRIPT
   config.vm.define "oss02" do |oss02|
     oss02.vm.provision :shell, :inline => "hostname oss02", run: "always"
     oss02.vm.provision :shell, :inline => $etc_hosts
+    oss02.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     oss02.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    oss02.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     oss02.vm.provision :shell, :inline => $lustre_server_rhel
     oss02.vm.provision :shell, :inline => $e2fsprogs_rhel
     oss02.vm.provision :shell, :inline => $lustre_kernel_install
@@ -416,9 +418,8 @@ SCRIPT
   config.vm.define "centos6" do |centos6|
     centos6.vm.provision :shell, :inline => "hostname centos6", run: "always"
     centos6.vm.provision :shell, :inline => $etc_hosts
+    centos6.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     centos6.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    centos6.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos6.vm.provision :shell, :inline => $lustre_client_rhel
     centos6.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # install lustre-client and then lock the kernel version
@@ -442,9 +443,8 @@ SCRIPT
   config.vm.define "centos6_lustre18" do |centos6_lustre18|
     centos6_lustre18.vm.provision :shell, :inline => "hostname centos6_lustre18", run: "always"
     centos6_lustre18.vm.provision :shell, :inline => $etc_hosts
+    centos6_lustre18.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     centos6_lustre18.vm.provision :shell, :inline => $epel6
-    # [Errno 14] problem making ssl connection
-    centos6_lustre18.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos6_lustre18.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # lock the default kernel version
     centos6_lustre18.vm.provision :shell, :inline => $kernel_version_lock
@@ -484,9 +484,8 @@ SCRIPT
   config.vm.define "centos7" do |centos7|
     centos7.vm.provision :shell, :inline => "hostname centos7", run: "always"
     centos7.vm.provision :shell, :inline => $etc_hosts
+    centos7.vm.provision :shell, :inline => $yum_problem_making_ssl_connection
     centos7.vm.provision :shell, :inline => $epel7
-    # [Errno 14] problem making ssl connection
-    centos7.vm.provision :shell, :inline => "yum -y update nss* ca-certificates"
     centos7.vm.provision :shell, :inline => $lustre_client_rhel
     centos7.vm.provision :shell, :inline => "yum -y install yum-plugin-versionlock"
     # lock the default kernel version
