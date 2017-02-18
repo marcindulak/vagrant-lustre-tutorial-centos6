@@ -129,7 +129,7 @@ Vagrant.configure(2) do |config|
     centos7.vm.box_url = 'puppetlabs/centos-7.2-64-nocm'
     centos7.vm.network "private_network", ip: "10.0.4.30"
     centos7.vm.provider "virtualbox" do |v|
-      v.memory = 256
+      v.memory = 384
       v.cpus = 1
     end
   end
