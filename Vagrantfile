@@ -181,7 +181,7 @@ SCRIPT
 yum -y install http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
 SCRIPT
   $epel7 = <<SCRIPT
-yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+yum -y install http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
 SCRIPT
   # lustre rhel repos
   $lustre_server_rhel = <<SCRIPT
