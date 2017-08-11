@@ -80,7 +80,7 @@ Test the basic funcionality of the lustre filesystem with, e.g.::
         $ vagrant ssh centos7 -c "sudo su -c 'lfs getstripe /lustre/stripe_2/testfile'"
         $ vagrant ssh centos7 -c "sudo su -c 'rm -rf /lustre/stripe_2'"
 
-Benchmark with IOR, see http://goo.gl/7AWwQ referenced at http://wiki.opensfs.org/Zero_to_Hero.
+Benchmark with IOR, see http://goo.gl/7AWwQ (https://docs.google.com/document/d/1mTXXXYadO7QLVqs29BtzPzoffwKsYoVgwBS_s_pGxnU) referenced at http://wiki.opensfs.org/Zero_to_Hero.
 Testing file-per-process (only one ior process used here) small, random IO, assuming the server has 256MB RAM::
 
         $ vagrant ssh centos7 -c "sudo su -c 'wget https://github.com/chaos/ior/archive/3.0.1.tar.gz -O ior-3.0.1.tar.gz'"
